@@ -57,138 +57,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core = __importStar(require("@actions/core"));
 var github = __importStar(require("@actions/github"));
-var yaml = __importStar(require("js-yaml"));
-var fs = __importStar(require("fs"));
-var minimatch_1 = require("minimatch");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var context, pullRequest, issue_number, _a, owner, repo, repoToken, configPath, config, octokit, hr, br, files, error_1;
+        var context, pullRequest, issue_number, _a, owner, repo, repoToken, octokit;
         return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    _b.trys.push([0, 5, , 6]);
-                    context = github.context;
-                    pullRequest = context.payload.pull_request;
-                    if (!pullRequest) {
-                        throw new Error("No pull request information found");
-                    }
-                    issue_number = context.issue.number, _a = context.repo, owner = _a.owner, repo = _a.repo;
-                    repoToken = core.getInput("repo-token", { required: true });
-                    configPath = core.getInput("configuration-path", {
-                        required: true,
-                    });
-                    config = yaml.safeLoad(fs.readFileSync(configPath), "utf8");
-                    octokit = github.getOctokit(repoToken);
-                    hr = pullRequest.head.ref;
-                    br = pullRequest.base.ref;
-                    return [4 /*yield*/, getChangedFiles(octokit, issue_number, owner, repo)];
-                case 1:
-                    files = _b.sent();
-                    return [4 /*yield*/, addBranchLabels(config.head, hr, octokit, issue_number, owner, repo)];
-                case 2:
-                    _b.sent();
-                    return [4 /*yield*/, addBranchLabels(config.base, br, octokit, issue_number, owner, repo)];
-                case 3:
-                    _b.sent();
-                    return [4 /*yield*/, addFileLabels(config.files, files, octokit, issue_number, owner, repo)];
-                case 4:
-                    _b.sent();
-                    return [3 /*break*/, 6];
-                case 5:
-                    error_1 = _b.sent();
-                    core.error(error_1);
-                    core.setFailed(error_1.message);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+            try {
+                context = github.context;
+                pullRequest = context.payload.pull_request;
+                if (!pullRequest) {
+                    throw new Error("No pull request information found");
+                }
+                issue_number = context.issue.number, _a = context.repo, owner = _a.owner, repo = _a.repo;
+                repoToken = core.getInput("repo-token", { required: true });
+                octokit = github.getOctokit(repoToken);
+                console.table(pullRequest);
             }
-        });
-    });
-}
-function addBranchLabels(yamlArray, comp, octokit, // I don't know what the specific type of an octokit is - apparently not an object
-issue_number, owner, repo) {
-    return __awaiter(this, void 0, void 0, function () {
-        var labels_1;
-        return __generator(this, function (_a) {
-            if (yamlArray) { // If congi array exists
-                labels_1 = [];
-                yamlArray.forEach(function (element) {
-                    var _loop_1 = function (label) {
-                        element[label].forEach(function (pattern) {
-                            var mm = new minimatch_1.Minimatch(pattern); // Make a new minimatch
-                            if (mm.match(comp)) { // If the string matches
-                                labels_1.push(label); // Add the label to push
-                            }
-                        });
-                    };
-                    for (var label in element) {
-                        _loop_1(label);
-                    }
-                });
-                return [2 /*return*/, octokit.issues.addLabels({
-                        issue_number: issue_number,
-                        owner: owner,
-                        repo: repo,
-                        labels: labels_1,
-                    })]; // Add labels
+            catch (error) {
+                core.error(error);
+                core.setFailed(error.message);
             }
             return [2 /*return*/];
-        });
-    });
-}
-function addFileLabels(config, files, octokit, issue_number, owner, repo) {
-    return __awaiter(this, void 0, void 0, function () {
-        var labels_2;
-        return __generator(this, function (_a) {
-            if (config) { // If the config exists
-                labels_2 = [];
-                config.forEach(function (element) {
-                    var _loop_2 = function (label) {
-                        element[label].forEach(function (pattern) {
-                            var mm = new minimatch_1.Minimatch(pattern); // Create a new minimatcher
-                            files.forEach(function (file) {
-                                if (mm.match(file)) { // If its path matches the glob
-                                    labels_2.push(label); // Add the label to the array to be added to the PR
-                                }
-                            });
-                        });
-                    };
-                    for (var label in element) {
-                        _loop_2(label);
-                    }
-                });
-                return [2 /*return*/, octokit.issues.addLabels({
-                        issue_number: issue_number,
-                        owner: owner,
-                        repo: repo,
-                        labels: labels_2,
-                    })]; // Add labels
-            }
-            return [2 /*return*/];
-        });
-    });
-}
-function getChangedFiles(client, prNumber, owner, repo) {
-    return __awaiter(this, void 0, void 0, function () {
-        var listFilesOptions, listFilesResponse, changedFiles, _i, changedFiles_1, file;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    listFilesOptions = client.pulls.listFiles.endpoint.merge({
-                        owner: owner,
-                        repo: repo,
-                        pull_number: prNumber,
-                    });
-                    return [4 /*yield*/, client.paginate(listFilesOptions)];
-                case 1:
-                    listFilesResponse = _a.sent();
-                    changedFiles = listFilesResponse.map(function (f) { return f.filename; });
-                    core.debug("found changed files:");
-                    for (_i = 0, changedFiles_1 = changedFiles; _i < changedFiles_1.length; _i++) {
-                        file = changedFiles_1[_i];
-                        core.debug("  " + file);
-                    }
-                    return [2 /*return*/, changedFiles];
-            }
         });
     });
 }
