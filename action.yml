@@ -1,4 +1,4 @@
-name: 'Pull Request Labeller'
+name: 'Dependabot Merger Bot'
 description: 'Automatically merge dependabot PRs'
 author: 'Jack Ellis'
 inputs:
