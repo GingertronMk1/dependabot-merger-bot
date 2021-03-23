@@ -59,25 +59,40 @@ var core = __importStar(require("@actions/core"));
 var github = __importStar(require("@actions/github"));
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var context, pullRequest, issue_number, _a, owner, repo, repoToken, octokit;
+        var context, pullRequest, issue_number, _a, owner, repo, repoToken, octokit, new_comment, error_1;
         return __generator(this, function (_b) {
-            try {
-                context = github.context;
-                pullRequest = context.payload.pull_request;
-                if (!pullRequest) {
-                    throw new Error("No pull request information found");
-                }
-                issue_number = context.issue.number, _a = context.repo, owner = _a.owner, repo = _a.repo;
-                repoToken = core.getInput("repo-token", { required: true });
-                octokit = github.getOctokit(repoToken);
-                console.log("Pull Request");
-                console.log(pullRequest);
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 3, , 4]);
+                    context = github.context;
+                    pullRequest = context.payload.pull_request;
+                    if (!pullRequest) {
+                        throw new Error("No pull request information found");
+                    }
+                    issue_number = context.issue.number, _a = context.repo, owner = _a.owner, repo = _a.repo;
+                    repoToken = core.getInput("repo-token", { required: true });
+                    octokit = github.getOctokit(repoToken);
+                    console.log("Pull Request");
+                    console.log(pullRequest);
+                    if (!(pullRequest.user && pullRequest.user.login === "GingertronMk1")) return [3 /*break*/, 2];
+                    return [4 /*yield*/, octokit.issues.createComment({
+                            owner: owner,
+                            repo: repo,
+                            issue_number: issue_number,
+                            body: "Nice one"
+                        })];
+                case 1:
+                    new_comment = _b.sent();
+                    ;
+                    _b.label = 2;
+                case 2: return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _b.sent();
+                    core.error(error_1);
+                    core.setFailed(error_1.message);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
-            catch (error) {
-                core.error(error);
-                core.setFailed(error.message);
-            }
-            return [2 /*return*/];
         });
     });
 }

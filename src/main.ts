@@ -3,6 +3,7 @@ import * as github from "@actions/github";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
 import { Minimatch } from "minimatch";
+import { userInfo } from "node:os";
 
 async function run() {
   try {
@@ -21,6 +22,17 @@ async function run() {
 
     console.log("Pull Request");
     console.log(pullRequest);
+
+    if(pullRequest.user && pullRequest.user.login === "GingertronMk1") {
+      const new_comment  = await octokit.issues.createComment({
+        owner: owner,
+        repo: repo,
+        issue_number: issue_number,
+        body: "Nice one"
+      });
+    ;  
+
+    }
 
   } catch (error) {
     core.error(error);
