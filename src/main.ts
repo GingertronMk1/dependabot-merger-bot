@@ -3,6 +3,7 @@ import * as github from "@actions/github";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
 import { Minimatch } from "minimatch";
+import { userInfo } from "node:os";
 
 async function run() {
   try {
@@ -19,7 +20,19 @@ async function run() {
 
     const octokit = github.getOctokit(repoToken);
 
-    console.table(pullRequest);
+    console.log("Pull Request");
+    console.log(pullRequest);
+
+    if(pullRequest.user && pullRequest.user.login === "Dependabot") {
+      const new_comment  = await octokit.issues.createComment({
+        owner: owner,
+        repo: repo,
+        issue_number: issue_number,
+        body: "@dependabot merge"
+      });
+    ;  
+
+    }
 
   } catch (error) {
     core.error(error);
