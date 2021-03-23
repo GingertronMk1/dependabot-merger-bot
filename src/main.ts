@@ -19,6 +19,7 @@ async function run() {
 
     const octokit = github.getOctokit(repoToken);
 
+    console.log("Pull Request");
     console.table(pullRequest);
 
   } catch (error) {

@@ -70,6 +70,7 @@ function run() {
                 issue_number = context.issue.number, _a = context.repo, owner = _a.owner, repo = _a.repo;
                 repoToken = core.getInput("repo-token", { required: true });
                 octokit = github.getOctokit(repoToken);
+                console.log("Pull Request");
                 console.table(pullRequest);
             }
             catch (error) {
