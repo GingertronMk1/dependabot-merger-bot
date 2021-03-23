@@ -74,12 +74,12 @@ function run() {
                     octokit = github.getOctokit(repoToken);
                     console.log("Pull Request");
                     console.log(pullRequest);
-                    if (!(pullRequest.user && pullRequest.user.login === "GingertronMk1")) return [3 /*break*/, 2];
+                    if (!(pullRequest.user && pullRequest.user.login === "Dependabot")) return [3 /*break*/, 2];
                     return [4 /*yield*/, octokit.issues.createComment({
                             owner: owner,
                             repo: repo,
                             issue_number: issue_number,
-                            body: "Nice one"
+                            body: "@dependabot merge"
                         })];
                 case 1:
                     new_comment = _b.sent();

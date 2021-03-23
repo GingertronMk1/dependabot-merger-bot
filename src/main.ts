@@ -23,12 +23,12 @@ async function run() {
     console.log("Pull Request");
     console.log(pullRequest);
 
-    if(pullRequest.user && pullRequest.user.login === "GingertronMk1") {
+    if(pullRequest.user && pullRequest.user.login === "Dependabot") {
       const new_comment  = await octokit.issues.createComment({
         owner: owner,
         repo: repo,
         issue_number: issue_number,
-        body: "Nice one"
+        body: "@dependabot merge"
       });
     ;  
 
