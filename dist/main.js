@@ -71,7 +71,7 @@ function run() {
                 repoToken = core.getInput("repo-token", { required: true });
                 octokit = github.getOctokit(repoToken);
                 console.log("Pull Request");
-                console.table(pullRequest);
+                console.log(pullRequest);
             }
             catch (error) {
                 core.error(error);
