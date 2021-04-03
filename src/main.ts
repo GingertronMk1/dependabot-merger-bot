@@ -23,7 +23,7 @@ async function run() {
     console.log("Pull Request");
     console.log(pullRequest);
 
-    if(pullRequest.user && pullRequest.user.login === "Dependabot") {
+    if(pullRequest.user && ['dependabot', 'dependabot-preview'].indexOf(pullRequest.user.login) > -1) {
       const new_comment  = await octokit.issues.createComment({
         owner: owner,
         repo: repo,
