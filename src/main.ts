@@ -23,17 +23,22 @@ async function run() {
     console.log("Pull Request");
     console.log(pullRequest);
 
-    if(pullRequest.user && ['dependabot', 'dependabot-preview'].indexOf(pullRequest.user.login) > -1) {
-      const new_comment  = await octokit.issues.createComment({
+    if (
+      pullRequest.user &&
+      [
+        "dependabot[bot]",
+        "dependabot-preview[bot]",
+        "dependabot",
+        "dependabot-preview",
+      ].indexOf(pullRequest.user.login) > -1
+    ) {
+      const new_comment = await octokit.issues.createComment({
         owner: owner,
         repo: repo,
         issue_number: issue_number,
-        body: "@dependabot merge"
+        body: "@dependabot merge",
       });
-    ;  
-
     }
-
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);

@@ -74,16 +74,21 @@ function run() {
                     octokit = github.getOctokit(repoToken);
                     console.log("Pull Request");
                     console.log(pullRequest);
-                    if (!(pullRequest.user && ['dependabot', 'dependabot-preview'].indexOf(pullRequest.user.login) > -1)) return [3 /*break*/, 2];
+                    if (!(pullRequest.user &&
+                        [
+                            "dependabot[bot]",
+                            "dependabot-preview[bot]",
+                            "dependabot",
+                            "dependabot-preview",
+                        ].indexOf(pullRequest.user.login) > -1)) return [3 /*break*/, 2];
                     return [4 /*yield*/, octokit.issues.createComment({
                             owner: owner,
                             repo: repo,
                             issue_number: issue_number,
-                            body: "@dependabot merge"
+                            body: "@dependabot merge",
                         })];
                 case 1:
                     new_comment = _b.sent();
-                    ;
                     _b.label = 2;
                 case 2: return [3 /*break*/, 4];
                 case 3:
